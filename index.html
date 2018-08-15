@@ -39,33 +39,45 @@
     function initExtension (extensionsApi) {
       // "extensionsApi" is providing an interface documented here:
       // https://github.com/contentful/ui-extensions-sdk/blob/master/docs/ui-extensions-sdk-frontend.md
-
       // Automatically adjust UI Extension size in the Web App.
       extensionsApi.window.startAutoResizer();
+      
+      const dataField = extension.entry.fields.dataSource;
+      dataField.onValueChanged(function(value) {
+          //update chart data
+          console.log("AIDATEST::onValueChanged", value, dataField.getValue());
+          const newData = value || dataField.getValue(); 
+          //redraw the chart
+          drawChart(newData);
+      });
 
       // Load the Visualization API and the corechart package.
       google.charts.load('current', {'packages':['corechart']});
 
       // Set a callback to run when the Google Visualization API is loaded.
-      google.charts.setOnLoadCallback(drawChart);
+      google.charts.setOnLoadCallback(initChart);
 
-      // Callback that creates and populates a data table,
-      // instantiates the pie chart, passes in the data and
-      // draws it.
-      function drawChart() {
-
-        // Create a mock data table, this data can be loaded from an ajax API call.
-        var data = new google.visualization.DataTable();
-        data.addColumn('string', 'Topping');
-        data.addColumn('number', 'Slices');
-        data.addRows([
+      // Initialize the chart with mock data
+      function initChart() {
+        var defaultData = [
           ['Mushrooms', 3],
           ['Onions', 1],
           ['Olives', 1],
           ['Zucchini', 1],
           ['Pepperoni', 2]
-        ]);
-
+        ];
+        drawChart(defaultData);
+      }
+        
+      // Callback that creates and populates a data table,
+      // instantiates the pie chart, passes in the data and
+      // draws it.
+      function drawChart(dataValues) {
+        var dataTable = new google.visualization.DataTable();
+        dataTable.addColumn('string', 'Topping');
+        dataTable.addColumn('number', 'Slices');
+        dataTable.addRows(dataValues);
+    
         // Set chart options
         var options = {'title':'How Much Pizza I Ate Last Night',
                        'width':400,
@@ -73,7 +85,7 @@
 
         // Instantiate and draw our chart, passing in some options.
         var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
-        chart.draw(data, options);
+        chart.draw(dataTable, options);
       }
     }
   </script>
