@@ -44,30 +44,9 @@
       
       const dataField = extension.entry.fields.dataSource;
       dataField.onValueChanged(function(value) {
-          //update chart data
-          console.log("AIDATEST::onValueChanged", value, dataField.getValue());
-          const newData = value || dataField.getValue(); 
-          //redraw the chart
-          drawChart(newData);
+          const newData = value || dataField.getValue();
+          drawChart(newData.data);
       });
-
-      // Load the Visualization API and the corechart package.
-      google.charts.load('current', {'packages':['corechart']});
-
-      // Set a callback to run when the Google Visualization API is loaded.
-      google.charts.setOnLoadCallback(initChart);
-
-      // Initialize the chart with mock data
-      function initChart() {
-        var defaultData = [
-          ['Mushrooms', 3],
-          ['Onions', 1],
-          ['Olives', 1],
-          ['Zucchini', 1],
-          ['Pepperoni', 2]
-        ];
-        drawChart(defaultData);
-      }
         
       // Callback that creates and populates a data table,
       // instantiates the pie chart, passes in the data and
@@ -87,6 +66,24 @@
         var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
         chart.draw(dataTable, options);
       }
+        
+      // Initialize the chart with mock data
+      function initChart() {
+        var defaultData = [
+          ['Mushrooms', 3],
+          ['Onions', 1],
+          ['Olives', 1],
+          ['Zucchini', 1],
+          ['Pepperoni', 2]
+        ];
+        drawChart(defaultData);
+      }
+        
+      // Load the Visualization API and the corechart package.
+      google.charts.load('current', {'packages':['corechart']});
+
+      // Set a callback to run when the Google Visualization API is loaded.
+      google.charts.setOnLoadCallback(initChart);
     }
   </script>
 </body>
